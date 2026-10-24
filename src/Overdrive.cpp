@@ -1,5 +1,6 @@
 #include "Overdrive.h"
 
+#include "Events.h"
 #include "Settings.h"
 
 #include <algorithm>
@@ -263,6 +264,7 @@ namespace Overdrive
 					}
 				}
 				if (rows.empty()) {
+					Events::Report(Settings::profileSeconds);
 					continue;
 				}
 				REX::INFO("Profiler, last {} s: {} calls sped up, {} made a script wait a frame, {} were already thread-safe", Settings::profileSeconds, spedUp, waited, safe);
@@ -273,6 +275,7 @@ namespace Overdrive
 					REX::INFO("  {:>8} calls  {:>8.1f} us each  {}.{}  [{}{}]", row.calls, static_cast<double>(row.nanos) / static_cast<double>(row.calls) / 1000.0,
 						row.entry->className, row.entry->name, Tag(*row.entry), row.entry->game ? "" : ", plugin");
 				}
+				Events::Report(Settings::profileSeconds);
 			}
 		}
 	}
@@ -314,10 +317,11 @@ namespace Overdrive
 			REX::INFO("Sped up: {}: {}", className, names);
 		}
 
-		if (Settings::profile) {
-			g_profiling.store(true);
+		if (Settings::profile || Settings::profileEvents) {
+			g_profiling.store(Settings::profile);
 			std::thread(Profile).detach();
-			REX::INFO("Profiler: on, hottest {} natives logged every {} s", Settings::profileTop, Settings::profileSeconds);
+			REX::INFO("Profiler: on every {} s ({} natives, {} events)", Settings::profileSeconds, Settings::profile ? std::to_string(Settings::profileTop) + " hottest" : "no",
+				Settings::profileEvents ? std::to_string(Settings::profileEventsTop) + " most-sent" : "no");
 		}
 	}
 }

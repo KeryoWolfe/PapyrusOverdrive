@@ -46,6 +46,27 @@ lookups use the same function, so they get faster too. This is the same kind of
 fix as Skyrim Engine Fixes' form caching, aimed at the part that costs most here.
 The profiler's "us each" for `Game.GetFormFromFile` shows the difference.
 
+**VM tweaks**, ported from Papyrus Tweaks NG. All three are in Fallout 4's
+GameVM::Update, which works like Skyrim's:
+- `iStackDumpTimeoutMS` (default 15000): how long the VM can stay overstressed
+  before it dumps every stack to the Papyrus log. The game's 5000 makes the dump
+  a hitch of its own.
+- `bIgnoreMemoryLimit` (off by default): never cap script memory. The game only
+  lifts the cap while the VM is overstressed.
+- `bFixScriptPageAllocation` (on): stops a full memory page being handed out
+  when the VM is already over the cap.
+
+Each patch checks the bytes it replaces first, and changes nothing if they
+aren't the expected ones. Papyrus Tweaks' recursion fix isn't ported, because
+Fallout 4 already has a maximum stack depth (100).
+
+**Events.** Every event sent to scripts goes through `IVirtualMachine::SendEvent`.
+The profiler logs the most-sent events, and how many repeated an event already
+sent to the same object within `iMergeWindowMS`. Events you list in
+`sMergeEvents` are merged, meaning repeats within the window are dropped. This
+is opt-in: only list an event whose scripts don't care how often it fires or
+with which arguments.
+
 It doesn't shorten save loading: rebuilding the script objects stored in a save
 isn't affected by how fast functions answer.
 
@@ -53,7 +74,8 @@ isn't affected by how fast functions answer.
 
 The idea comes from Papyrus Tweaks NG's `bSpeedUpNativeCalls` for Skyrim, by
 Nightfallstorm (GPL-3.0), including its one-lock rule and its excluded classes
-and prefixes. Papyrus Tweaks NG patches the VM's check in code. Papyrus Overdrive
+and prefixes. Its stack dump timeout, memory limit and page allocation fixes are
+ported too. Papyrus Tweaks NG patches the VM's check in code. Papyrus Overdrive
 sets the function flag at bind time instead.
 
 ## Build

@@ -1,6 +1,8 @@
+#include "Events.h"
 #include "FileLookup.h"
 #include "Overdrive.h"
 #include "Settings.h"
+#include "VMTweaks.h"
 
 namespace
 {
@@ -24,6 +26,8 @@ F4SE_PLUGIN_LOAD(const F4SE::LoadInterface* a_f4se)
 	// Before the game binds its natives (it does once plugins are loaded).
 	Overdrive::Install();
 	FileLookup::Install();
+	VMTweaks::Install();
+	Events::Install();
 	F4SE::GetMessagingInterface()->RegisterListener(OnMessage);
 	return true;
 }

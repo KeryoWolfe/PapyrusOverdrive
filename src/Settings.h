@@ -15,6 +15,15 @@ namespace Settings
 	inline int  profileSeconds = 60;     // [Profiler] iIntervalSeconds
 	inline int  profileTop = 20;         // [Profiler] iTop
 
+	inline int  stackDumpTimeoutMS = 15000;     // [VM] iStackDumpTimeoutMS (-1: the game's 5000; 0: never)
+	inline bool ignoreMemoryLimit = false;      // [VM] bIgnoreMemoryLimit
+	inline bool fixScriptPageAllocation = true; // [VM] bFixScriptPageAllocation
+
+	inline bool profileEvents = true;           // [Events] bProfile
+	inline int  profileEventsTop = 15;          // [Events] iTop
+	inline std::vector<std::string> mergeEvents;  // [Events] sMergeEvents
+	inline int  mergeWindowMS = 100;            // [Events] iMergeWindowMS
+
 	inline std::vector<std::string> allowPrefixes;     // [Filters] sAllowPrefixes
 	inline std::vector<std::string> excludePrefixes;   // [Filters] sExcludePrefixes
 	inline std::vector<std::string> excludeClasses;    // [Filters] sExcludeClasses

@@ -121,6 +121,15 @@ namespace Settings
 		profileSeconds = number("profiler.iintervalseconds", profileSeconds, 5, 3600);
 		profileTop = number("profiler.itop", profileTop, 1, 200);
 
+		stackDumpTimeoutMS = number("vm.istackdumptimeoutms", stackDumpTimeoutMS, -1, 50'000'000);
+		ignoreMemoryLimit = flag("vm.bignorememorylimit", ignoreMemoryLimit);
+		fixScriptPageAllocation = flag("vm.bfixscriptpageallocation", fixScriptPageAllocation);
+
+		profileEvents = flag("events.bprofile", profileEvents);
+		profileEventsTop = number("events.itop", profileEventsTop, 1, 200);
+		mergeEvents = List(text("events.smergeevents", ""));
+		mergeWindowMS = number("events.imergewindowms", mergeWindowMS, 1, 10'000);
+
 		allowPrefixes = List(text("filters.sallowprefixes", DEFAULT_ALLOW));
 		excludePrefixes = List(text("filters.sexcludeprefixes", DEFAULT_EXCLUDE_PREFIXES));
 		excludeClasses = List(text("filters.sexcludeclasses", DEFAULT_EXCLUDE_CLASSES));
