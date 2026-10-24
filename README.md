@@ -67,6 +67,12 @@ sent to the same object within `iMergeWindowMS`. Events you list in
 is opt-in: only list an event whose scripts don't care how often it fires or
 with which arguments.
 
+**Load sampler.** While a save loads, it reads the game's main thread's call
+stack every 20 ms, plus the busiest other thread's. When the load is done, it
+logs where the time went: which modules and functions were seen most, both
+anywhere on the stack and on top of it, and the most common stacks. This is for
+loads that take minutes. It does nothing outside a load.
+
 It doesn't shorten save loading: rebuilding the script objects stored in a save
 isn't affected by how fast functions answer.
 

@@ -130,6 +130,10 @@ namespace Settings
 		mergeEvents = List(text("events.smergeevents", ""));
 		mergeWindowMS = number("events.imergewindowms", mergeWindowMS, 1, 10'000);
 
+		samplerEnabled = flag("sampler.benabled", samplerEnabled);
+		samplerMS = number("sampler.isamplems", samplerMS, 1, 1000);
+		samplerTop = number("sampler.itop", samplerTop, 5, 200);
+
 		allowPrefixes = List(text("filters.sallowprefixes", DEFAULT_ALLOW));
 		excludePrefixes = List(text("filters.sexcludeprefixes", DEFAULT_EXCLUDE_PREFIXES));
 		excludeClasses = List(text("filters.sexcludeclasses", DEFAULT_EXCLUDE_CLASSES));

@@ -24,6 +24,10 @@ namespace Settings
 	inline std::vector<std::string> mergeEvents;  // [Events] sMergeEvents
 	inline int  mergeWindowMS = 100;            // [Events] iMergeWindowMS
 
+	inline bool samplerEnabled = true;          // [Sampler] bEnabled
+	inline int  samplerMS = 20;                 // [Sampler] iSampleMS
+	inline int  samplerTop = 25;                // [Sampler] iTop
+
 	inline std::vector<std::string> allowPrefixes;     // [Filters] sAllowPrefixes
 	inline std::vector<std::string> excludePrefixes;   // [Filters] sExcludePrefixes
 	inline std::vector<std::string> excludeClasses;    // [Filters] sExcludeClasses
