@@ -9,6 +9,7 @@ namespace Settings
 	inline bool speedUpNatives = true;   // [General] bSpeedUpNatives
 	inline bool includePluginNatives = false;  // [General] bIncludePluginNatives
 	inline bool logSpedUp = true;        // [General] bLogSpedUp
+	inline bool cacheFileLookups = true; // [General] bCacheFileLookups
 
 	inline bool profile = true;          // [Profiler] bEnabled
 	inline int  profileSeconds = 60;     // [Profiler] iIntervalSeconds

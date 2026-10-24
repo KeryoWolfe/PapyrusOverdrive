@@ -115,6 +115,7 @@ namespace Settings
 		speedUpNatives = flag("general.bspeedupnatives", speedUpNatives);
 		includePluginNatives = flag("general.bincludepluginnatives", includePluginNatives);
 		logSpedUp = flag("general.blogspedup", logSpedUp);
+		cacheFileLookups = flag("general.bcachefilelookups", cacheFileLookups);
 
 		profile = flag("profiler.benabled", profile);
 		profileSeconds = number("profiler.iintervalseconds", profileSeconds, 5, 3600);
@@ -126,7 +127,7 @@ namespace Settings
 		excludeFunctions = List(text("filters.sexcludefunctions", ""));
 		includeFunctions = List(text("filters.sincludefunctions", ""));
 
-		REX::INFO("Settings: {} (speed up natives {}, plugin natives {}, profiler {} every {} s)", values.empty() ? "INI not found, defaults" : "read",
-			speedUpNatives, includePluginNatives, profile, profileSeconds);
+		REX::INFO("Settings: {} (speed up natives {}, plugin natives {}, cache file lookups {}, profiler {} every {} s)", values.empty() ? "INI not found, defaults" : "read",
+			speedUpNatives, includePluginNatives, cacheFileLookups, profile, profileSeconds);
 	}
 }

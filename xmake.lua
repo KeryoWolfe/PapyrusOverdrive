@@ -10,12 +10,15 @@ end
 includes(commonlib)
 
 set_project("PapyrusOverdrive")
-set_version("0.1.0")
+set_version("0.2.0")
 set_license("GPL-3.0")
 set_languages("c++23")
 set_warnings("allextra")
 
 add_rules("mode.debug", "mode.releasedbg")
+-- releasedbg unless `xmake f -m` says otherwise: optimized, with a .pdb
+-- (plain "release" isn't one of the modes here and builds without one).
+set_defaultmode("releasedbg")
 add_rules("plugin.vsxmake.autoupdate")
 
 target("PapyrusOverdrive")
@@ -25,7 +28,7 @@ target("PapyrusOverdrive")
         description = "Lets read-only engine functions answer Papyrus scripts at once, and profiles native calls"
     })
 
-    add_defines("PAPYRUSOVERDRIVE_VERSION_MAJOR=0", "PAPYRUSOVERDRIVE_VERSION_MINOR=1", "PAPYRUSOVERDRIVE_VERSION_PATCH=0")  -- keep in step with set_version
+    add_defines("PAPYRUSOVERDRIVE_VERSION_MAJOR=0", "PAPYRUSOVERDRIVE_VERSION_MINOR=2", "PAPYRUSOVERDRIVE_VERSION_PATCH=0")  -- keep in step with set_version
 
     add_files("src/**.cpp")
     add_headerfiles("src/**.h")

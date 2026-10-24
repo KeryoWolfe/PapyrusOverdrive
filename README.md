@@ -36,6 +36,16 @@ many calls, how long each took, and whether each was sped up, already
 thread-safe, or **WAITS A FRAME**. Reads in that last group are the next
 candidates for `sIncludeFunctions`.
 
+**File lookup cache.** `Game.GetFormFromFile` finds the plugin with the game's
+`TESDataHandler::LookupModByName`, which walks the list of every plugin file and
+compares names one by one (`_stricmp`) on every call. A name that isn't loaded,
+such as a compatibility check for an optional plugin, walks the whole list every
+time. Once the game's data is loaded, Papyrus Overdrive answers from a table
+instead. The answers are the same. `Game.IsPluginInstalled` and the engine's own
+lookups use the same function, so they get faster too. This is the same kind of
+fix as Skyrim Engine Fixes' form caching, aimed at the part that costs most here.
+The profiler's "us each" for `Game.GetFormFromFile` shows the difference.
+
 It doesn't shorten save loading: rebuilding the script objects stored in a save
 isn't affected by how fast functions answer.
 
@@ -48,7 +58,10 @@ sets the function flag at bind time instead.
 
 ## Build
 
-`xmake build -r` in this folder. It needs CommonLibF4: either this project's own
+`xmake build -r` in this folder. The output, `PapyrusOverdrive.dll` and
+`PapyrusOverdrive.pdb`, ends up in `build\windows\x64\releasedbg\`. The default mode
+is releasedbg, which is optimized and comes with a .pdb. If you configured
+another mode before, run `xmake f -m releasedbg` first. It needs CommonLibF4: either this project's own
 copy (`git submodule update --init --recursive`, which fetches libxse/commonlibf4
 into `lib\commonlibf4`) or, when that folder is missing, the one in a 4Stim
 checkout next to this folder (`..\4Stim\lib\commonlibf4`).
