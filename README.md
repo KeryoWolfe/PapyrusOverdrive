@@ -67,6 +67,13 @@ sent to the same object within `iMergeWindowMS`. Events you list in
 is opt-in: only list an event whose scripts don't care how often it fires or
 with which arguments.
 
+**Script census.** A minute after a game loads, every 10 minutes and whenever
+the game saves, it counts the script instances the game is keeping. These are
+what a save stores and a load restores one by one. The log shows the scripts
+with the most instances, the plugins they come from, and what grew since the
+last count. Objects created in game are counted under the plugin of what they
+were created from. Arrays and structs aren't counted.
+
 **Load sampler.** While a save loads, it reads the game's main thread's call
 stack every 20 ms, plus the busiest other thread's. When the load is done, it
 logs where the time went: which modules and functions were seen most, both

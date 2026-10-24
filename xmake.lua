@@ -10,7 +10,7 @@ end
 includes(commonlib)
 
 set_project("PapyrusOverdrive")
-set_version("0.4.0")
+set_version("0.5.0")
 set_license("GPL-3.0")
 set_languages("c++23")
 set_warnings("allextra")
@@ -28,7 +28,7 @@ target("PapyrusOverdrive")
         description = "Lets read-only engine functions answer Papyrus scripts at once, and profiles native calls"
     })
 
-    add_defines("PAPYRUSOVERDRIVE_VERSION_MAJOR=0", "PAPYRUSOVERDRIVE_VERSION_MINOR=4", "PAPYRUSOVERDRIVE_VERSION_PATCH=0")  -- keep in step with set_version
+    add_defines("PAPYRUSOVERDRIVE_VERSION_MAJOR=0", "PAPYRUSOVERDRIVE_VERSION_MINOR=5", "PAPYRUSOVERDRIVE_VERSION_PATCH=0")  -- keep in step with set_version
 
     add_files("src/**.cpp")
     add_headerfiles("src/**.h")

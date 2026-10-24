@@ -28,6 +28,10 @@ namespace Settings
 	inline int  samplerMS = 20;                 // [Sampler] iSampleMS
 	inline int  samplerTop = 25;                // [Sampler] iTop
 
+	inline bool censusEnabled = true;           // [Census] bEnabled
+	inline int  censusMinutes = 10;             // [Census] iIntervalMinutes (0: only on load and save)
+	inline int  censusTop = 25;                 // [Census] iTop
+
 	inline std::vector<std::string> allowPrefixes;     // [Filters] sAllowPrefixes
 	inline std::vector<std::string> excludePrefixes;   // [Filters] sExcludePrefixes
 	inline std::vector<std::string> excludeClasses;    // [Filters] sExcludeClasses

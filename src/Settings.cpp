@@ -134,6 +134,10 @@ namespace Settings
 		samplerMS = number("sampler.isamplems", samplerMS, 1, 1000);
 		samplerTop = number("sampler.itop", samplerTop, 5, 200);
 
+		censusEnabled = flag("census.benabled", censusEnabled);
+		censusMinutes = number("census.iintervalminutes", censusMinutes, 0, 1440);
+		censusTop = number("census.itop", censusTop, 5, 200);
+
 		allowPrefixes = List(text("filters.sallowprefixes", DEFAULT_ALLOW));
 		excludePrefixes = List(text("filters.sexcludeprefixes", DEFAULT_EXCLUDE_PREFIXES));
 		excludeClasses = List(text("filters.sexcludeclasses", DEFAULT_EXCLUDE_CLASSES));

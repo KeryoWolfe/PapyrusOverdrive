@@ -1,3 +1,6 @@
+#include <thread>
+
+#include "Census.h"
 #include "Events.h"
 #include "FileLookup.h"
 #include "Overdrive.h"
@@ -23,6 +26,10 @@ namespace
 		case F4SE::MessagingInterface::kPostLoadGame:
 		case F4SE::MessagingInterface::kNewGame:
 			Sampler::Stop();
+			Census::GameStarted();
+			break;
+		case F4SE::MessagingInterface::kPreSaveGame:
+			std::thread([]() { Census::Run("as the game saved"); }).detach();
 			break;
 		default:
 			break;
