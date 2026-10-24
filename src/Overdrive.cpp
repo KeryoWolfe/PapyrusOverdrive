@@ -35,7 +35,7 @@ namespace Overdrive
 			std::string                    className;
 			std::string                    name;
 			bool                           game = false;     // bound by Fallout4.exe (its vtable is in the game's image)
-			bool                           spedUp = false;   // flag set by Papyrus Overdrive
+			std::atomic<bool>              spedUp{ false };  // flag set by Papyrus Overdrive
 			std::atomic<std::uint64_t>     calls{ 0 };
 			std::atomic<std::uint64_t>     nanos{ 0 };
 			std::uint64_t                  lastCalls = 0;    // profiler thread only
@@ -60,6 +60,11 @@ namespace Overdrive
 		std::recursive_mutex g_callLock;
 
 		std::atomic<bool> g_profiling{ false };
+
+		// Whether binds are sorted yet (Report): the game marks its thread-safe
+		// natives with SetCallableFromTasklets right after binding them, so
+		// they're only known once everything is bound.
+		bool g_classified = false;
 
 		struct Counts
 		{
@@ -174,6 +179,24 @@ namespace Overdrive
 			return result;
 		}
 
+		// Sorts one bound native; speeds it up if the filters allow. g_lock
+		// held exclusively.
+		void Classify(Entry& a_entry)
+		{
+			const auto function = a_entry.function.get();
+			if (function->CanBeCalledFromTasklets()) {
+				++g_counts.alreadySafe;
+			} else if (static_cast<const NativeFunctionBase*>(function)->isLatent) {
+				++g_counts.latent;  // takes real time anyway (Wait, PathToReference...)
+			} else if (Settings::speedUpNatives && Allowed(a_entry)) {
+				function->SetCallableFromTasklets(true);
+				a_entry.spedUp.store(true);
+				++g_counts.spedUp;
+			} else {
+				++g_counts.filtered;
+			}
+		}
+
 		bool BindNativeMethod(RE::BSScript::IVirtualMachine* a_this, IFunction* a_function)
 		{
 			if (!a_function) {
@@ -197,19 +220,11 @@ namespace Overdrive
 
 			std::unique_lock l(g_lock);
 			++(entry->game ? g_counts.game : g_counts.plugin);
-			if (a_function->CanBeCalledFromTasklets()) {
-				++g_counts.alreadySafe;
-			} else if (static_cast<const NativeFunctionBase*>(a_function)->isLatent) {
-				++g_counts.latent;  // takes real time anyway (Wait, PathToReference...)
-			} else if (Settings::speedUpNatives && Allowed(*entry)) {
-				a_function->SetCallableFromTasklets(true);
-				entry->spedUp = true;
-				++g_counts.spedUp;
-			} else {
-				++g_counts.filtered;
+			if (g_classified) {
+				Classify(*entry);
 			}
 
-			if (entry->spedUp || Settings::profile) {
+			if (Settings::speedUpNatives || Settings::profile) {
 				if (!g_originalCall.contains(vtable)) {
 					REL::Relocation<std::uintptr_t> table{ reinterpret_cast<std::uintptr_t>(vtable) };
 					g_originalCall[vtable] = reinterpret_cast<call_t>(table.write_vfunc(CALL_SLOT, &Call));
@@ -298,7 +313,11 @@ namespace Overdrive
 
 		std::map<std::string, std::string> byClass;
 		{
-			std::shared_lock l(g_lock);
+			std::unique_lock l(g_lock);
+			for (const auto& entry : g_entries) {
+				Classify(*entry);
+			}
+			g_classified = true;
 			REX::INFO("Natives bound: {} by the game, {} by plugins; {} already thread-safe, {} latent (left alone), {} sped up, {} left as they were (filters)",
 				g_counts.game, g_counts.plugin, g_counts.alreadySafe, g_counts.latent, g_counts.spedUp, g_counts.filtered);
 			if (g_counts.game == 0) {

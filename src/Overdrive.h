@@ -14,7 +14,9 @@
 // What this does (the idea is Papyrus Tweaks NG's "bSpeedUpNativeCalls" for
 // Skyrim, by Nightfallstorm, done differently): every native the game binds
 // passes through IVirtualMachine::BindNativeMethod (vtable slot 0x1B; the game
-// makes ~950 such calls, all through the vtable). For a game function whose
+// makes ~950 such calls, all through the vtable). Once everything is bound
+// (kGameDataReady: the game marks its own thread-safe natives with
+// SetCallableFromTasklets right after binding them), for a game function whose
 // name matches the INI's read-only filters and isn't latent, its
 // NativeFunctionBase::isCallableFromTasklet flag (+0x41, what slot 0x13 returns
 // on all 456 of the game's native function vtables) is set, so the VM calls it
